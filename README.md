@@ -44,23 +44,26 @@
 
 ## ディレクトリ構成
 
+```
 attendance-app
-├─ docs : 設計書一式
-├─ src : ソースコード
-├─ test : テストコード
-├─ db : DB設計関連
+├─ docs/        設計書一式
+├─ src/         ソースコード
+├─ test/        テストコード
+├─ db/          DB設計関連
 └─ README.md
+```
 
 ---
 
 ## 設計書構成
 
+```
 docs
-├─ 01_requirements : 要件定義
-├─ 02_basic_design : 基本設計
-├─ 03_detail_design : 詳細設計
-└─ 05_test : テスト仕様
-
+├─ 01_requirements/   要件定義
+├─ 02_basic_design/   基本設計
+├─ 03_detail_design/  詳細設計
+└─ 05_test/           テスト仕様
+```
 
 ---
 
