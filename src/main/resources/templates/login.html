@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>ログイン - 勤怠管理アプリ</title>
+</head>
+<body>
+    <h2>ログイン</h2>
+
+    <!-- MSG003: 認証失敗時のエラーメッセージ -->
+    <div th:if="${param.error}" style="color: red;">
+        <p>ユーザーIDまたはパスワードが正しくありません。</p>
+    </div>
+    
+    <!-- MSG013: 想定外エラー発生時のメッセージ -->
+    <div th:if="${param.systemError}" style="color: red;">
+        <p>処理中にエラーが発生しました。時間をおいて再度お試しください。</p>
+    </div>
+
+    <form th:action="@{/login}" method="post">
+        <div>
+            <label for="username">ユーザーID</label>
+            <!-- 認証失敗時 (errorパラメータ存在時) に username入力値を保持 -->
+            <!-- MSG001対応として、HTML5の required 属性で未入力をフロントエンドで防ぎます -->
+            <input type="text" id="username" name="username" 
+                   th:value="${param.error != null ? session['SPRING_SECURITY_LAST_USERNAME'] : ''}" 
+                   required placeholder="ユーザーIDを入力してください" />
+        </div>
+        <div>
+            <label for="password">パスワード</label>
+            <!-- MSG002対応として required を付与。パスワードは保持しない -->
+            <input type="password" id="password" name="password" 
+                   required placeholder="パスワードを入力してください" />
+        </div>
+        <div>
+		    <input type="checkbox" id="remember-me" name="rememberMe" />
+		    <label for="remember-me">ログイン状態を保持する</label>
+		</div>
+        <div>
+            <button type="submit">ログイン</button>
+        </div>
+    </form>
+</body>
+</html>
