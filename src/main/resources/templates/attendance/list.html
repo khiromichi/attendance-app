@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>勤怠一覧 | 勤怠管理システム</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .sat { color: blue; } /* 土曜日 */
+        .sun { color: red; }  /* 日曜日 */
+        .table-hover tbody tr:hover { background-color: #f8f9fa; }
+    </style>
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark mb-4">
+    <div class="container">
+        <span class="navbar-brand">勤怠管理システム</span>
+        <div class="navbar-nav ms-auto">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="btn btn-outline-light btn-sm">ログアウト</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container shadow-sm p-4 bg-white rounded">
+    <h2 class="mb-4">勤怠一覧</h2>
+
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <a th:href="@{/attendance/list(targetYearMonth=${targetYearMonth}, monthShift='prev')}" 
+           class="btn btn-outline-secondary">&lt; 前月</a>
+        
+        <h4 class="m-0" th:text="${targetYearMonth}">2026-04</h4>
+        
+        <a th:href="@{/attendance/list(targetYearMonth=${targetYearMonth}, monthShift='next')}" 
+           class="btn btn-outline-secondary">次月 &gt;</a>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+    <div th:if="${emptyMessage}" class="alert alert-info" th:text="${emptyMessage}"></div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th style="width: 15%;">日付</th>
+                    <th style="width: 15%;">出勤時刻</th>
+                    <th style="width: 15%;">退勤時刻</th>
+                    <th style="width: 15%;">休憩時間</th>
+                    <th style="width: 15%;">勤務時間</th>
+                    <th>備考</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="day : ${attendanceList}">
+                    <td th:classappend="${day.dayOfWeek == '土' ? 'sat' : (day.dayOfWeek == '日' ? 'sun' : '')}">
+                        <span th:text="${#temporals.format(day.date, 'MM/dd')}">04/01</span>
+                        (<span th:text="${day.dayOfWeek}">水</span>)
+                    </td>
+                    <td th:text="${day.checkInTime}">09:00</td>
+                    <td th:text="${day.checkOutTime}">18:00</td>
+                    <td th:text="${day.breakMinutes}">01:00</td>
+                    <td th:text="${day.workingMinutes}">08:00</td>
+                    <td th:text="${day.note}" class="text-muted small"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-4 text-center">
+        <a th:href="@{/home}" class="btn btn-link">ホーム画面へ戻る</a>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

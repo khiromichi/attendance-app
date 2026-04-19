@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="jp.co.attendance.attendance_app.mapper.AttendanceMapper">
+
+    <resultMap id="AttendanceResultMap" type="jp.co.attendance.attendance_app.entity.AttendanceRecord">
+        <id property="id" column="attendance_id" />
+        <result property="workDate" column="work_date" />
+        <result property="clockInTime" column="clock_in_time" />
+        <result property="clockOutTime" column="clock_out_time" />
+        <result property="statusId" column="status_id" />
+        
+        <collection property="breaks" ofType="jp.co.attendance.attendance_app.entity.BreakRecord">
+            <id property="id" column="break_id" />
+            <result property="startTime" column="break_start" />
+            <result property="endTime" column="break_end" />
+        </collection>
+    </resultMap>
+
+    <select id="findMonthlyAttendance" resultMap="AttendanceResultMap">
+        SELECT
+            a.id AS attendance_id, a.work_date, a.clock_in_time, a.clock_out_time, a.status_id,
+            b.id AS break_id, b.break_start, b.break_end
+        FROM attendance_records a
+        LEFT OUTER JOIN break_records b ON a.id = b.attendance_id
+        WHERE a.employee_id = #{employeeId}
+          AND a.work_date BETWEEN #{startDate} AND #{endDate}
+        ORDER BY a.work_date ASC, b.break_start ASC
+    </select>
+
+</mapper>
